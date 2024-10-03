@@ -24,7 +24,7 @@ public class SalariedEmployee extends AbstractEmployeeClass {
   public SalariedEmployee(String name, String id, double yearlySalary)
           throws IllegalArgumentException {
     super(name, id);
-    if (yearlySalary < 0 || yearlySalary > Employee.MAX_SALARY.getValue()) {
+    if (yearlySalary < 0 || yearlySalary > SalaryEmployee.MAX_SALARY.getValue()) {
       throw new IllegalArgumentException("Invalid yearly salary");
     }
     this.yearlySalary = RoundingUtility.roundToTwoDecimalPlaces(yearlySalary);
@@ -65,6 +65,6 @@ public class SalariedEmployee extends AbstractEmployeeClass {
     }
     double effectiveRaise = Math.min(raisePercent, 10);
     double newSalary = yearlySalary * (1 + effectiveRaise / 100);
-    yearlySalary = Math.min(newSalary, Employee.MAX_SALARY.getValue());
+    yearlySalary = Math.min(newSalary, SalaryEmployee.MAX_SALARY.getValue());
   }
 }

@@ -22,10 +22,10 @@ public class HourlyEmployee extends AbstractEmployeeClass {
   public HourlyEmployee(String name, String id, double hourlySalary, double normalHours)
           throws IllegalArgumentException {
     super(name, id);
-    if (hourlySalary > Employee.MAX_HOURLY_RATE.getValue()
-            || hourlySalary < Employee.MIN_HOURLY_RATE.getValue()
-            || normalHours > Employee.MAX_WEEKLY_HOURS.getValue()
-            || normalHours < Employee.MIN_WEEKLY_HOURS.getValue()) {
+    if (hourlySalary > HourlyEmployeeEnum.MAX_HOURLY_RATE.getValue()
+            || hourlySalary < HourlyEmployeeEnum.MIN_HOURLY_RATE.getValue()
+            || normalHours > HourlyEmployeeEnum.MAX_WEEKLY_HOURS.getValue()
+            || normalHours < HourlyEmployeeEnum.MIN_WEEKLY_HOURS.getValue()) {
       throw new IllegalArgumentException("Invalid Employee information");
     }
 
@@ -47,7 +47,7 @@ public class HourlyEmployee extends AbstractEmployeeClass {
     double overtimeHours = Math.max(0, hoursToUse - 40.00);
 
     double regularPay = regularHours * hourlySalary;
-    double overtimePay = overtimeHours * (Employee.HOURLY_OVERTIME_RATE.getValue() * hourlySalary);
+    double overtimePay = overtimeHours * (HourlyEmployeeEnum.HOURLY_OVERTIME_RATE.getValue() * hourlySalary);
 
     useSpecialHours = false; // Reset to normal hours after payment if it is used above.
     return RoundingUtility.roundToTwoDecimalPlaces(regularPay + overtimePay);
@@ -76,7 +76,7 @@ public class HourlyEmployee extends AbstractEmployeeClass {
     }
     double newSalary = RoundingUtility.roundToTwoDecimalPlaces(
             hourlySalary * (1 + raisePercent / 100));
-    if (newSalary <= Employee.MAX_HOURLY_RATE.getValue()) {
+    if (newSalary <= HourlyEmployeeEnum.MAX_HOURLY_RATE.getValue()) {
       hourlySalary = newSalary;
     }
   }
@@ -89,8 +89,8 @@ public class HourlyEmployee extends AbstractEmployeeClass {
    * @throws IllegalArgumentException If the hours are outside the valid range.
    */
   public void setSpecialHours(double hours) throws IllegalArgumentException {
-    if (hours < Employee.MIN_WEEKLY_HOURS.getValue()
-            || hours > Employee.MAX_WEEKLY_HOURS.getValue()) {
+    if (hours < HourlyEmployeeEnum.MIN_WEEKLY_HOURS.getValue()
+            || hours > HourlyEmployeeEnum.MAX_WEEKLY_HOURS.getValue()) {
       throw new IllegalArgumentException("Special hours must be between 0 and 80");
     }
     this.specialHours = RoundingUtility.roundToTwoDecimalPlaces(hours);

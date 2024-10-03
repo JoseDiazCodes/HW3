@@ -1,10 +1,8 @@
 package student;
 
-public enum Employee {
+public enum HourlyEmployeeEnum {
   MIN_HOURLY_RATE(0),
   MAX_HOURLY_RATE(50.00),
-
-  MAX_SALARY(1000000.00),
 
   HOURLY_OVERTIME_RATE(1.50),
 
@@ -14,7 +12,7 @@ public enum Employee {
 
   private final double value;
 
-  Employee(double value) {
+  HourlyEmployeeEnum(double value) {
     this.value = value;
   }
 
