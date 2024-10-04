@@ -29,6 +29,19 @@ public class SalariedEmployee implements IEmployee {
     this.yearlySalary = RoundingUtility.roundToTwoDecimalPlaces(yearlySalary);
   }
 
+
+  /**
+   * Copy constructor for SalariedEmployee.
+   * Creates a new SalariedEmployee with the same properties as the given employee.
+   *
+   * @param other The SalariedEmployee to copy.
+   */
+  public SalariedEmployee(SalariedEmployee other) {
+    this.name = other.name;
+    this.id = other.id;
+    this.yearlySalary = other.yearlySalary;
+  }
+
   /**
    * Calculates and returns the pay for the current period (monthly).
    * For salaried employees, this is always 1/12 of their yearly salary.

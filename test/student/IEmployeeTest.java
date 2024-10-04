@@ -2,6 +2,7 @@ package student;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -112,5 +113,36 @@ public class IEmployeeTest {
     // Test invalid special hours
     assertThrows(IllegalArgumentException.class, () -> snoopyHours.setSpecialHours(-1));
     assertThrows(IllegalArgumentException.class, () -> snoopyHours.setSpecialHours(81));
+  }
+
+  @Test
+  public void testHourlyEmployeeCopyConstructor() {
+    HourlyEmployee original = new HourlyEmployee("John Doe", "JD-001", 20.00, 40);
+    original.setSpecialHours(45);
+    HourlyEmployee copy = new HourlyEmployee(original);
+
+    assertEquals(original.getName(), copy.getName());
+    assertEquals(original.getID(), copy.getID());
+    assertEquals(original.getBaseSalary(), copy.getBaseSalary());
+    assertEquals(original.getPayForThisPeriod(), copy.getPayForThisPeriod());
+
+    // Modify the copy and check that the original is unchanged
+    copy.giveRaiseByPercent(5);
+    assertNotEquals(original.getBaseSalary(), copy.getBaseSalary());
+  }
+
+  @Test
+  public void testSalariedEmployeeCopyConstructor() {
+    SalariedEmployee original = new SalariedEmployee("Jane Doe", "JD-002", 60000.00);
+    SalariedEmployee copy = new SalariedEmployee(original);
+
+    assertEquals(original.getName(), copy.getName());
+    assertEquals(original.getID(), copy.getID());
+    assertEquals(original.getBaseSalary(), copy.getBaseSalary());
+    assertEquals(original.getPayForThisPeriod(), copy.getPayForThisPeriod());
+
+    // Modify the copy and check that the original is unchanged
+    copy.giveRaiseByPercent(5);
+    assertNotEquals(original.getBaseSalary(), copy.getBaseSalary());
   }
 }
