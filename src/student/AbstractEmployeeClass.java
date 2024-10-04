@@ -12,6 +12,12 @@ abstract class AbstractEmployeeClass implements IEmployee {
     this.id = id;
   }
 
+  // New protected copy constructor
+  protected AbstractEmployeeClass(AbstractEmployeeClass other) {
+    this.name = other.name;
+    this.id = other.id;
+  }
+
   @Override
   public abstract double getPayForThisPeriod();
 
@@ -29,5 +35,13 @@ abstract class AbstractEmployeeClass implements IEmployee {
   @Override
   public String getName() {
     return name;
+  }
+
+  @Override
+  public String toString() {
+    return String.format("Name: %s%nID: %s%nBase Salary: $%.2f",
+            this.getName(),
+            this.getID(),
+            this.getBaseSalary());
   }
 }

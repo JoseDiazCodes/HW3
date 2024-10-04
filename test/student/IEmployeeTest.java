@@ -101,4 +101,55 @@ public class IEmployeeTest {
             "SalPrec", "SPREC", 75432.10);
     assertEquals(6286.01, salaryPrecision.getPayForThisPeriod(), 0.01);
   }
+
+  @Test
+  public void testHourlyEmployeeCopyConstructor() {
+    snoopyHours.setSpecialHours(30);
+    HourlyEmployee copy = new HourlyEmployee(snoopyHours);
+
+    assertEquals(snoopyHours.getName(), copy.getName(), "Names should match");
+    assertEquals(snoopyHours.getID(), copy.getID(), "IDs should match");
+    assertEquals(snoopyHours.getBaseSalary(), copy.getBaseSalary(), "Base salaries should match");
+    assertEquals(snoopyHours.getPayForThisPeriod(), copy.getPayForThisPeriod(), "Pay for this period should match");
+
+    // Verify that modifying the copy doesn't affect the original
+    copy.giveRaiseByPercent(5);
+    assertNotEquals(snoopyHours.getBaseSalary(), copy.getBaseSalary(), "Modifying copy should not affect original");
+  }
+
+  @Test
+  public void testSalariedEmployeeCopyConstructor() {
+    SalariedEmployee copy = new SalariedEmployee(lucy);
+
+    assertEquals(lucy.getName(), copy.getName(), "Names should match");
+    assertEquals(lucy.getID(), copy.getID(), "IDs should match");
+    assertEquals(lucy.getBaseSalary(), copy.getBaseSalary(), "Base salaries should match");
+    assertEquals(lucy.getPayForThisPeriod(), copy.getPayForThisPeriod(), "Pay for this period should match");
+
+    // Verify that modifying the copy doesn't affect the original
+    copy.giveRaiseByPercent(5);
+    assertNotEquals(lucy.getBaseSalary(), copy.getBaseSalary(), "Modifying copy should not affect original");
+  }
+
+  @Test
+  public void testHourlyEmployeeToString() {
+    String expected = String.format("Name: Snoopy%nID: 111-CHLY-BRWN%nBase Salary: $17.50");
+    assertEquals(expected, snoopyHours.toString(), "toString output should match expected format");
+
+    // Test with different values
+    HourlyEmployee anotherEmployee = new HourlyEmployee("Charlie Brown", "456-RNDBLK", 25.75, 40);
+    expected = String.format("Name: Charlie Brown%nID: 456-RNDBLK%nBase Salary: $25.75");
+    assertEquals(expected, anotherEmployee.toString(), "toString output should match expected format for different values");
+  }
+
+  @Test
+  public void testSalariedEmployeeToString() {
+    String expected = String.format("Name: Lucy%nID: 222-22-2222%nBase Salary: $70000.00");
+    assertEquals(expected, lucy.toString(), "toString output should match expected format");
+
+    // Test with different values
+    SalariedEmployee anotherEmployee = new SalariedEmployee("Linus", "789-BLNKT", 85000.50);
+    expected = String.format("Name: Linus%nID: 789-BLNKT%nBase Salary: $85000.50");
+    assertEquals(expected, anotherEmployee.toString(), "toString output should match expected format for different values");
+  }
 }

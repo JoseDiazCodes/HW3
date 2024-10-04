@@ -31,6 +31,17 @@ public class SalariedEmployee extends AbstractEmployeeClass {
   }
 
   /**
+   * Copy constructor for SalariedEmployee.
+   * Creates a new SalariedEmployee with the same properties as the given employee.
+   *
+   * @param other The SalariedEmployee to copy.
+   */
+  public SalariedEmployee(SalariedEmployee other) {
+    super(other); // This calls the copy constructor of AbstractEmployeeClass
+    this.yearlySalary = other.yearlySalary;
+  }
+
+  /**
    * Calculates and returns the pay for the current period (monthly).
    * For salaried employees, this is always 1/12 of their yearly salary.
    *

@@ -35,6 +35,20 @@ public class HourlyEmployee extends AbstractEmployeeClass {
   }
 
   /**
+   * Copy constructor for HourlyEmployee.
+   * Creates a new HourlyEmployee with the same properties as the given employee.
+   *
+   * @param other The HourlyEmployee to copy.
+   */
+  public HourlyEmployee(HourlyEmployee other) {
+    super(other); // This calls the copy constructor of AbstractEmployeeClass
+    this.hourlySalary = other.hourlySalary;
+    this.normalHours = other.normalHours;
+    this.specialHours = other.specialHours;
+    this.useSpecialHours = other.useSpecialHours;
+  }
+
+  /**
    * Calculates and returns the pay for the current period.
    * This method takes into account regular hours, overtime, and any special hours set.
    *
