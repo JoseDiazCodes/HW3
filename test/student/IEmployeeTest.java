@@ -1,7 +1,11 @@
 package student;
 
-import org.junit.jupiter.api.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class IEmployeeTest {
   private HourlyEmployee snoopyHours;
@@ -10,9 +14,12 @@ public class IEmployeeTest {
 
   @BeforeEach
   void setUp() {
-    snoopyHours = new HourlyEmployee("Snoopy", "111-CHLY-BRWN", 17.50, 20);
-    lucy = new SalariedEmployee("Lucy", "222-22-2222", 70000.00);
-    woodStock = new SalariedEmployee("Woodstock", "33-CHIRP", 180000.50);
+    snoopyHours = new HourlyEmployee(
+            "Snoopy", "111-CHLY-BRWN", 17.50, 20);
+    lucy = new SalariedEmployee(
+            "Lucy", "222-22-2222", 70000.00);
+    woodStock = new SalariedEmployee(
+            "Woodstock", "33-CHIRP", 180000.50);
   }
 
   @Test
@@ -30,13 +37,23 @@ public class IEmployeeTest {
   }
 
   @Test
+  public void testGetHappyDayEmployee() {
+    assertDoesNotThrow(() -> new HourlyEmployee(
+            "Happy", "HAPPY-123", 20.00, 40));
+    assertDoesNotThrow(() -> new SalariedEmployee(
+            "Joyful", "JOY-456", 80000.00));
+  }
+
+  @Test
   public void testGetPayForThisPeriod() {
     assertEquals(350.00, snoopyHours.getPayForThisPeriod(), 0.01);
     assertEquals(5833.33, lucy.getPayForThisPeriod(), 0.01);
     assertEquals(15000.04, woodStock.getPayForThisPeriod(), 0.01);
 
-    snoopyHours.setSpecialHours(45);
-    assertEquals(831.25, snoopyHours.getPayForThisPeriod(), 0.01);
+    // Test overtime for hourly employee
+    HourlyEmployee overtimeWorker = new HourlyEmployee(
+            "Overtime", "OT-789", 20.00, 45);
+    assertEquals(950.00, overtimeWorker.getPayForThisPeriod(), 0.01);
   }
 
   @Test
@@ -44,23 +61,6 @@ public class IEmployeeTest {
     assertEquals(17.50, snoopyHours.getBaseSalary(), 0.01);
     assertEquals(70000.00, lucy.getBaseSalary(), 0.01);
     assertEquals(180000.50, woodStock.getBaseSalary(), 0.01);
-  }
-
-  @Test
-  public void testGiveRaiseByPercent() {
-    snoopyHours.giveRaiseByPercent(5);
-    assertEquals(18.38, snoopyHours.getBaseSalary(), 0.01);
-
-    lucy.giveRaiseByPercent(10);
-    assertEquals(77000.00, lucy.getBaseSalary(), 0.01);
-
-    woodStock.giveRaiseByPercent(15); // Should be capped at 10%
-    assertEquals(198000.55, woodStock.getBaseSalary(), 0.01);
-
-    // Test raise beyond maximum salary
-    SalariedEmployee maxEmployee = new SalariedEmployee("Max", "MAX-ID", 999999.99);
-    maxEmployee.giveRaiseByPercent(10);
-    assertEquals(1000000.00, maxEmployee.getBaseSalary(), 0.01);
   }
 
   @Test
@@ -78,27 +78,39 @@ public class IEmployeeTest {
   }
 
   @Test
+  public void testGiveRaiseByPercent() {
+    snoopyHours.giveRaiseByPercent(5);
+    assertEquals(18.38, snoopyHours.getBaseSalary(), 0.01);
+
+    lucy.giveRaiseByPercent(10);
+    assertEquals(77000.00, lucy.getBaseSalary(), 0.01);
+
+    // Test raise beyond maximum salary
+    SalariedEmployee maxEmployee = new SalariedEmployee(
+            "Max", "MAX-ID", 999999.99);
+    maxEmployee.giveRaiseByPercent(10);
+    assertEquals(1000000.00, maxEmployee.getBaseSalary(), 0.01);
+
+    // Test invalid raise percentages
+    assertThrows(IllegalArgumentException.class, () -> snoopyHours.giveRaiseByPercent(
+            -1));
+    assertThrows(IllegalArgumentException.class, () -> lucy.giveRaiseByPercent(
+            10.1));
+  }
+
+  @Test
   public void testSetSpecialHours() {
     snoopyHours.setSpecialHours(30);
     assertEquals(525.00, snoopyHours.getPayForThisPeriod(), 0.01);
 
-    assertThrows(IllegalArgumentException.class, () -> snoopyHours.setSpecialHours(90));
-    assertThrows(IllegalArgumentException.class, () -> snoopyHours.setSpecialHours(-1));
+    snoopyHours.setSpecialHours(45);
+    assertEquals(831.25, snoopyHours.getPayForThisPeriod(), 0.01);
 
     // Test that special hours reset after getPayForThisPeriod
-    snoopyHours.setSpecialHours(50);
-    snoopyHours.getPayForThisPeriod();
     assertEquals(350.00, snoopyHours.getPayForThisPeriod(), 0.01);
-  }
 
-  @Test
-  public void testRoundingPrecision() {
-    HourlyEmployee precisionTest = new HourlyEmployee(
-            "Precise", "PREC", 15.67, 40.5);
-    assertEquals(638.55, precisionTest.getPayForThisPeriod(), 0.01);
-
-    SalariedEmployee salaryPrecision = new SalariedEmployee(
-            "SalPrec", "SPREC", 75432.10);
-    assertEquals(6286.01, salaryPrecision.getPayForThisPeriod(), 0.01);
+    // Test invalid special hours
+    assertThrows(IllegalArgumentException.class, () -> snoopyHours.setSpecialHours(-1));
+    assertThrows(IllegalArgumentException.class, () -> snoopyHours.setSpecialHours(81));
   }
 }

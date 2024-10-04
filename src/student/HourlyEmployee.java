@@ -2,9 +2,11 @@ package student;
 
 /**
  * Represents an hourly employee in the system.
- * This class extends AbstractEmployeeClass and implements specific behavior for hourly workers.
+ * This class implements IEmployee interface and provides specific behavior for hourly workers.
  */
-public class HourlyEmployee extends AbstractEmployeeClass {
+public class HourlyEmployee implements IEmployee {
+  private String name;
+  private String id;
   private double hourlySalary;
   private final double normalHours;
   private double specialHours;
@@ -21,14 +23,17 @@ public class HourlyEmployee extends AbstractEmployeeClass {
    */
   public HourlyEmployee(String name, String id, double hourlySalary, double normalHours)
           throws IllegalArgumentException {
-    super(name, id);
-    if (hourlySalary > HourlyEmployeeEnum.MAX_HOURLY_RATE.getValue()
-            || hourlySalary < HourlyEmployeeEnum.MIN_HOURLY_RATE.getValue()
+    if (name == null || id == null || name.isEmpty() || id.isEmpty()) {
+      throw new IllegalArgumentException("Name and ID must not be null or empty");
+    }
+    if (hourlySalary < 0 || hourlySalary > HourlyEmployeeEnum.MAX_HOURLY_RATE.getValue()
             || normalHours > HourlyEmployeeEnum.MAX_WEEKLY_HOURS.getValue()
             || normalHours < HourlyEmployeeEnum.MIN_WEEKLY_HOURS.getValue()) {
       throw new IllegalArgumentException("Invalid Employee information");
     }
 
+    this.name = name;
+    this.id = id;
     this.hourlySalary = RoundingUtility.roundToTwoDecimalPlaces(hourlySalary);
     this.normalHours = RoundingUtility.roundToTwoDecimalPlaces(normalHours);
     this.useSpecialHours = false;
@@ -49,7 +54,7 @@ public class HourlyEmployee extends AbstractEmployeeClass {
     double regularPay = regularHours * hourlySalary;
     double overtimePay = overtimeHours * (HourlyEmployeeEnum.HOURLY_OVERTIME_RATE.getValue() * hourlySalary);
 
-    useSpecialHours = false; // Reset to normal hours after payment if it is used above.
+    useSpecialHours = false; // Reset to normal hours after payment
     return RoundingUtility.roundToTwoDecimalPlaces(regularPay + overtimePay);
   }
 
@@ -65,6 +70,7 @@ public class HourlyEmployee extends AbstractEmployeeClass {
 
   /**
    * Gives a percentage-based raise to the employee's hourly salary.
+   * If the raise would exceed the maximum allowed hourly rate, the salary is set to the maximum.
    *
    * @param raisePercent The percentage of the raise, between 0 and 10.
    * @throws IllegalArgumentException If the raise percentage is outside the valid range.
@@ -76,9 +82,27 @@ public class HourlyEmployee extends AbstractEmployeeClass {
     }
     double newSalary = RoundingUtility.roundToTwoDecimalPlaces(
             hourlySalary * (1 + raisePercent / 100));
-    if (newSalary <= HourlyEmployeeEnum.MAX_HOURLY_RATE.getValue()) {
-      hourlySalary = newSalary;
-    }
+    hourlySalary = Math.min(newSalary, HourlyEmployeeEnum.MAX_HOURLY_RATE.getValue());
+  }
+
+  /**
+   * Retrieves the unique identifier of the employee.
+   *
+   * @return The employee's unique ID as a String.
+   */
+  @Override
+  public String getID() {
+    return id;
+  }
+
+  /**
+   * Retrieves the name of the employee.
+   *
+   * @return The employee's name.
+   */
+  @Override
+  public String getName() {
+    return name;
   }
 
   /**
@@ -94,8 +118,6 @@ public class HourlyEmployee extends AbstractEmployeeClass {
       throw new IllegalArgumentException("Special hours must be between 0 and 80");
     }
     this.specialHours = RoundingUtility.roundToTwoDecimalPlaces(hours);
-    // allows us to set new hours worked.
-    this.useSpecialHours = true; // this is the flag we will use to see if we will use normal hours
-    // or special hours.
+    this.useSpecialHours = true;
   }
 }

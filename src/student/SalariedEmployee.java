@@ -2,14 +2,11 @@ package student;
 
 /**
  * Represents a salaried employee in the system.
- * This class extends AbstractEmployeeClass and implements specific behavior for salaried workers.
- * Salaried employees are paid a fixed yearly salary, which is divided into monthly payments.
+ * This class implements IEmployee interface and provides specific behavior for salaried workers.
  */
-public class SalariedEmployee extends AbstractEmployeeClass {
-
-  /**
-   * The yearly salary of the employee.
-   */
+public class SalariedEmployee implements IEmployee {
+  private String name;
+  private String id;
   private double yearlySalary;
 
   /**
@@ -18,15 +15,17 @@ public class SalariedEmployee extends AbstractEmployeeClass {
    * @param name The name of the employee.
    * @param id The unique identifier of the employee.
    * @param yearlySalary The yearly salary of the employee.
-   * @throws IllegalArgumentException
-   *                  If the yearly salary is negative or exceeds the maximum allowed salary
+   * @throws IllegalArgumentException If any of the input parameters are invalid.
    */
-  public SalariedEmployee(String name, String id, double yearlySalary)
-          throws IllegalArgumentException {
-    super(name, id);
+  public SalariedEmployee(String name, String id, double yearlySalary) throws IllegalArgumentException {
+    if (name == null || id == null || name.isEmpty() || id.isEmpty()) {
+      throw new IllegalArgumentException("Name and ID must not be null or empty");
+    }
     if (yearlySalary < 0 || yearlySalary > SalaryEmployee.MAX_SALARY.getValue()) {
       throw new IllegalArgumentException("Invalid yearly salary");
     }
+    this.name = name;
+    this.id = id;
     this.yearlySalary = RoundingUtility.roundToTwoDecimalPlaces(yearlySalary);
   }
 
@@ -53,18 +52,38 @@ public class SalariedEmployee extends AbstractEmployeeClass {
 
   /**
    * Gives a percentage-based raise to the employee's yearly salary.
-   * If the raise exceeds the maximum allowed salary, the salary is set to the maximum.
+   * If the raise would exceed the maximum allowed salary, the salary is set to the maximum.
    *
    * @param raisePercent The percentage of the raise, between 0 and 10.
-   * @throws IllegalArgumentException If the raise percentage is less than 0 or greater than 10.
+   * @throws IllegalArgumentException If the raise percentage is outside the valid range.
    */
   @Override
-  public void giveRaiseByPercent(double raisePercent) {
-    if (raisePercent < 0) {
-      throw new IllegalArgumentException("Raise percent must be non-negative");
+  public void giveRaiseByPercent(double raisePercent) throws IllegalArgumentException {
+    if (raisePercent < 0 || raisePercent > 10) {
+      throw new IllegalArgumentException("Raise percent must be between 0 and 10");
     }
-    double effectiveRaise = Math.min(raisePercent, 10);
-    double newSalary = yearlySalary * (1 + effectiveRaise / 100);
+    double newSalary = RoundingUtility.roundToTwoDecimalPlaces(
+            yearlySalary * (1 + raisePercent / 100));
     yearlySalary = Math.min(newSalary, SalaryEmployee.MAX_SALARY.getValue());
+  }
+
+  /**
+   * Retrieves the unique identifier of the employee.
+   *
+   * @return The employee's unique ID as a String.
+   */
+  @Override
+  public String getID() {
+    return id;
+  }
+
+  /**
+   * Retrieves the name of the employee.
+   *
+   * @return The employee's name.
+   */
+  @Override
+  public String getName() {
+    return name;
   }
 }
