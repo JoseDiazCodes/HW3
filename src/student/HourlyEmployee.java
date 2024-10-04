@@ -15,10 +15,10 @@ public class HourlyEmployee implements IEmployee {
   /**
    * Constructs a new HourlyEmployee with the specified details.
    *
-   * @param name The name of the employee.
-   * @param id The unique identifier of the employee.
+   * @param name         The name of the employee.
+   * @param id           The unique identifier of the employee.
    * @param hourlySalary The hourly rate of pay for the employee.
-   * @param normalHours The normal number of hours worked per week.
+   * @param normalHours  The normal number of hours worked per week.
    * @throws IllegalArgumentException If any of the input parameters are invalid.
    */
   public HourlyEmployee(String name, String id, double hourlySalary, double normalHours)
@@ -103,6 +103,19 @@ public class HourlyEmployee implements IEmployee {
   @Override
   public String getName() {
     return name;
+  }
+
+  /**
+   * Provides a string representation of the HourlyEmployee.
+   *
+   * @return A string containing the employee's name, ID, and hourly rate.
+   */
+  @Override
+  public String toString() {
+    return String.format("Name: %s%nID: %s%nBase Salary: $%.2f",
+            this.getName(),
+            this.getID(),
+            this.getBaseSalary());
   }
 
   /**

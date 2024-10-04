@@ -86,4 +86,17 @@ public class SalariedEmployee implements IEmployee {
   public String getName() {
     return name;
   }
+
+  /**
+   * Provides a string representation of the HourlyEmployee.
+   *
+   * @return A string containing the employee's name, ID, and hourly rate.
+   */
+  @Override
+  public String toString() {
+    return String.format("Name: %s%nID: %s%nBase Salary: $%.2f",
+            this.getName(),
+            this.getID(),
+            this.getBaseSalary());
+  }
 }
